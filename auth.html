@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login & Register</title>
+  <style>
+  body {
+      font-family: Arial, sans-serif;
+      background-image: url(formbg.png);
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 80px rgba(0,0,0,0.2);
+      width: 350px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 95%;
+      padding: 12px;
+      background-color: #df305f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #00e88f;
+    }
+
+    .toggle {
+      margin-top: 15px;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    p {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2 id="form-title">Register</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button id="submit-btn">Register</button>
+    <div class="toggle" id="toggle-form">Already have an account? Login</div>
+    <p id="message"></p>
+  </div>
+
+  <script type="module">
+    // ✅ Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    // 🔹 Your Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCX_mwSLh7XJHYKcudDRlLNCb20fR9Fhu4",
+      authDomain: "eatsylogin.firebaseapp.com",
+      projectId: "eatsylogin",
+      storageBucket: "eatsylogin.firebasestorage.app",
+      messagingSenderId: "1064504602051",
+      appId: "1:1064504602051:web:148c953a5301532bdf6176"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // DOM Elements
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const message = document.getElementById("message");
+    const submitBtn = document.getElementById("submit-btn");
+    const toggleForm = document.getElementById("toggle-form");
+    const formTitle = document.getElementById("form-title");
+
+    let isLogin = false;
+
+    // Toggle Between Login & Register
+    toggleForm.addEventListener("click", () => {
+      isLogin = !isLogin;
+      formTitle.textContent = isLogin ? "Login" : "Register";
+      submitBtn.textContent = isLogin ? "Login" : "Register";
+      toggleForm.textContent = isLogin
+        ? "Don’t have an account? Register"
+        : "Already have an account? Login";
+      message.textContent = "";
+    });
+
+    // Handle Register/Login
+    submitBtn.addEventListener("click", async () => {
+      const emailVal = email.value.trim();
+      const passwordVal = password.value.trim();
+      message.textContent = "";
+
+      if (!emailVal || !passwordVal) {
+        message.textContent = "⚠️ Please fill in all fields.";
+        message.style.color = "red";
+        return;
+      }
+
+      try {
+        if (isLogin) {
+          await signInWithEmailAndPassword(auth, emailVal, passwordVal);
+          message.textContent = "✅ Login Successful! Redirecting...";
+          message.style.color = "green";
+          
+          // ✅ Redirect to eastypro.html after 1.5 seconds
+          setTimeout(() => {
+            window.location.href = "eastypro.html";
+          }, 1500);
+        } else {
+          await createUserWithEmailAndPassword(auth, emailVal, passwordVal);
+          message.textContent = "✅ Registration Successful! You can now log in.";
+          message.style.color = "green";
+        }
+      } catch (error) {
+        message.textContent = "❌ " + error.message;
+        message.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

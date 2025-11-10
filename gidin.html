@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Your Website</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #000;
+      margin-top: 60px;
+      text-align: center;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: linear-gradient(90deg, #9b5cff, #845ef7);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #7f4de4, #6f4bd1);
+      transform: scale(1.05);
+    }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin-top: 40px;
+    }
+
+    .hero img {
+      width: 100%;
+      max-width: 900px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Footer or bottom space */
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      color: #777;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+        margin-top: 40px;
+      }
+
+      .btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+      }
+
+      .hero img {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Build your website</h1>
+  <a href="#" class="btn">Get started</a>
+
+  <div class="hero">
+    <img src="pic1.jpeg" alt="Website Building Illustration">
+  </div>
+
+  <footer>© 2025 Your Company Name. All rights reserved.</footer>
+
+</body>
+</html>

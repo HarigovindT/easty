@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      
+      background-image: url(formbg.png);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 60px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #df305f;
+      margin-bottom: 20px;
+    }
+    .order {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background: #fff8fa;
+      position: relative;
+    }
+    .order h3 {
+      margin: 0;
+      color: #333;
+    }
+    .order p {
+      margin: 5px 0;
+      color: #555;
+    }
+    .no-orders {
+      text-align: center;
+      color: #888;
+      font-size: 18px;
+      margin-top: 50px;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #ff4f4f;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .delete-btn:hover {
+      background: #e63939;
+    }
+    .items img {
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin: 30px 10px;
+        padding: 20px;
+      }
+      .items img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .items {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* space between two product rows */
+}
+
+.items img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 15px; /* space between image and product name */
+  object-fit: cover;
+}
+.home-icon {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 28px;
+  color: #df305f;
+  text-decoration: none;
+  background: white;
+  border-radius: 50%;
+  padding: 10px 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  z-index: 999; /* keeps it above other elements */
+}
+
+.home-icon:hover {
+  color: white;
+  background: #df305f;
+  transform: scale(1.1);
+}
+
+/* 🔹 Responsive tweaks for mobile screens */
+@media (max-width: 768px) {
+  .home-icon {
+    top: 15px;
+    left: 15px;
+    font-size: 22px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-icon {
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    padding: 7px 9px;
+  }
+}
+
+
+  </style>
+</head>
+<body>
+    <a href="eastypro.html" class="home-icon" title="Go to Home">
+  <i class="fas fa-home"></i>
+</a>
+
+
+  <div class="container">
+    <h1>My Orders</h1>
+    <div id="orders-list" class="orders"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, orderBy, deleteDoc, doc } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const loginConfig = {
+      apiKey: "AIzaSyCX_mwSLh7XJHYKcudDRlLNCb20fR9Fhu4",
+      authDomain: "eatsylogin.firebaseapp.com",
+      projectId: "eatsylogin",
+      storageBucket: "eatsylogin.firebasestorage.app",
+      messagingSenderId: "1064504602051",
+      appId: "1:1064504602051:web:148c953a5301532bdf6176"
+    };
+
+    const orderConfig = {
+      apiKey: "AIzaSyD0BpXUxwKHz7M5BqzICoo95c64d1zrwsk",
+      authDomain: "restaurantorders-36ef1.firebaseapp.com",
+      projectId: "restaurantorders-36ef1",
+      storageBucket: "restaurantorders-36ef1.firebasestorage.app",
+      messagingSenderId: "592429269702",
+      appId: "1:592429269702:web:1e7d96bf6d26aba2548dc7"
+    };
+
+    const loginApp = getApps().find(app => app.name === "[DEFAULT]") || initializeApp(loginConfig);
+    const ordersApp = getApps().find(app => app.name === "ordersApp") || initializeApp(orderConfig, "ordersApp");
+
+    const auth = getAuth(loginApp);
+    const db = getFirestore(ordersApp);
+    const ordersList = document.getElementById("orders-list");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        ordersList.innerHTML = `<div class="no-orders">⚠️ Please <a href="auth.html">log in</a> to view your orders.</div>`;
+        return;
+      }
+
+      try {
+        const q = query(
+          collection(db, "orders"),
+          where("userId", "==", user.uid),
+          orderBy("timestamp", "desc")
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          ordersList.innerHTML = `<div class="no-orders">No orders found yet 🛍️</div>`;
+          return;
+        }
+
+        ordersList.innerHTML = "";
+        querySnapshot.forEach((docSnap) => {
+          const order = docSnap.data();
+          const itemsHtml = order.cart.map(i => `
+            <div class="items">
+              <img src="${i.image}" alt="${i.name}"/> ${i.name} - ₹${i.price} x ${i.quantity || 1}
+            </div>
+          `).join("");
+
+          const time = order.timestamp?.toDate().toLocaleString() || "—";
+
+          const orderDiv = document.createElement("div");
+          orderDiv.classList.add("order");
+          orderDiv.innerHTML = `
+            <h3>🧾 Order ID: ${docSnap.id}</h3>
+            <p><strong>Date:</strong> ${time}</p>
+            <p><strong>Total:</strong> ₹${order.total}</p>
+            <p><strong>Payment:</strong> ${order.payment}</p>
+            <p><strong>Address:</strong> ${order.address}, ${order.city} - ${order.pincode}</p>
+            <p><strong>Items:</strong><br>${itemsHtml}</p>
+            <button class="delete-btn">Delete</button>
+          `;
+
+          // Delete button handler
+          orderDiv.querySelector(".delete-btn").addEventListener("click", async () => {
+            if (confirm("Are you sure you want to delete this order?")) {
+              await deleteDoc(doc(db, "orders", docSnap.id));
+              alert("Order deleted successfully!");
+              orderDiv.remove();
+            }
+          });
+
+          ordersList.appendChild(orderDiv);
+        });
+
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        ordersList.innerHTML = `<div class="no-orders">❌ Unable to fetch orders. Please try again.</div>`;
+      }
+    });
+  </script>
+</body>
+</html>

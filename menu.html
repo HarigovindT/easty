@@ -1,0 +1,562 @@
+<html>
+ <head>
+  <title>
+   Product Page
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url();
+            background-size:850px;
+            filter: brightness(90%); 
+        }
+        .container1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .product-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .product-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width:210px;
+            height: 280;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .product-card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .product-card .discount {
+            position: absolute;        
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 0px;
+            top: 10px;
+            left: 10px;
+        }
+        .product-card .time {
+            font-size: 12px;
+            color: #888;
+            margin: 5px 0;
+        }
+        .product-card .name {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .product-card .weight {
+            font-size: 12px;
+            color: #888;
+            margin: 5px 0;
+        }
+        .product-card .price {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .product-card .old-price {
+            text-decoration: line-through;
+            color: #888;
+            font-size: 12px;
+        }
+        .product-card .add-btn {
+            background-color: #00c853;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        @media (max-width: 1200px) {
+            .product-card {
+                width: calc(25% - 20px);
+            }
+        }
+        @media (max-width: 992px) {
+            .product-card {
+                width: calc(33.33% - 20px);
+            }
+        }
+        @media (max-width: 768px) {
+            .product-card {
+                width: calc(50% - 20px);
+            }
+        }
+        @media (max-width: 576px) {
+            .product-card {
+                width: 100%;
+            }
+        }
+        .cart-button {
+            position: absolute;
+            top: 1px; 
+            right: 80px; 
+            background-color: #df305f; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            padding: 10px 15px;
+            font-size: 16px; 
+            cursor: pointer; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+            transition: background-color 0.3s; 
+            z-index: 1000; 
+            text-decoration: none; 
+            display: flex;
+            align-items: center; 
+        }
+        .cart-button:hover {
+            background-color: #0056b3; 
+        }
+        .cart-button i {
+            margin-right: 5px; 
+        }
+        .back-button {
+    position: absolute;
+    top: 1px;
+    right: 180px; /* places it to the left of the cart button */
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+  </style>
+ </head>
+ <body>
+   <!-- Top Navigation Buttons -->
+<a href="eastypro.html" class="back-button">
+  <i class="fas fa-arrow-left"></i> BACK
+</a>
+
+<a href="cart.html" class="cart-button">
+  <i class="fas fa-shopping-cart"></i> CART
+</a>
+
+    <div class="container1">
+        <div class="section-title">
+            NON-VEGETARIAN
+        </div>
+        <div class="product-grid">
+         <div class="product-card">
+          <div class="discount">
+           21% OFF
+          </div>
+          <img alt="Borosil Stainless Steel Hydra Gospo..." height="150" src="chilly chicken.jpeg" width="150"/>
+          <div class="name">
+           Chilly Chicken 
+          </div>
+          <div class="weight">
+           1 Piece
+          </div>
+          <div class="price">
+           <span class="old-price">
+            ₹420
+           </span>
+           ₹400
+          </div>
+          <button class="add-btn"onclick="addToCart('Chilly chicken ', 400)">
+           ADD
+          </button>
+         </div>
+         <div class="product-card">
+          <div class="discount">
+           19% OFF
+          </div>
+          <img alt="Sunpure Refined Sunflower Oil" height="150" src="biriyan.jpg"width="150"/>
+          <div class="name">
+           Biriyani
+          </div>
+          <div class="weight">
+           1 piece
+          </div>
+          <div class="price">
+           <span class="old-price">
+            ₹140
+           </span>
+           ₹120
+          </div>
+          <button class="add-btn"onclick="addToCart('Biriyani', 120)">
+           ADD
+          </button>
+         </div>
+         <div class="product-card">
+          <img alt="Bhagyalakshmi Urad Dal - Split" height="150" src="beef roast.jpg"width="150"/>
+          <div class="name">
+           Beef Roast
+          </div>
+          <div class="weight">
+           1 piece
+          </div>
+          <div class="price">
+            <span class="old-price">
+                ₹180
+               </span>
+               ₹140
+          </div>
+          <button class="add-btn"onclick="addToCart('beef roast', 140)">
+           ADD
+          </button>
+         </div>
+         <div class="product-card">
+          <img alt="Eastern Kashmiri Chilly Powder" height="150" src="chicken fry.jpg" width="150"/>
+          <div class="name">
+           Chicken Fry
+          </div>
+          <div class="weight">
+           1 piece
+          </div>
+          <div class="price">
+            <span class="old-price">
+                ₹180
+               </span>
+               ₹150
+          </div>
+          <button class="add-btn"onclick="addToCart('chciken fry', 150)">
+           ADD
+          </button>
+         </div>
+         <div class="product-card">
+          <img alt="Bhagyalakshmi Idli Sooji" height="150" src="dragonchicken.jpg" width="150"/>
+          <div class="name">
+          Dragon Chicken
+          </div>
+          <div class="weight">
+           1 piece
+          </div>
+          <div class="price">
+            <span class="old-price">
+                ₹130
+               </span>
+               ₹100
+          </div>
+          <button class="add-btn"onclick="addToCart('Dragonchicken', 100)">
+           ADD
+          </button>
+         </div>
+         <div class="product-card">
+          <div class="discount">
+           2% OFF
+          </div>
+          <img alt="Bhagyalakshmi Bni Super Premium..." height="150" src="pepper chciken.jpg"width="150"/>    
+          <div class="name">
+         Pepper Chicken
+          </div>
+          <div class="weight">
+           1 piece
+          </div>
+          <div class="price">
+           <span class="old-price">
+            ₹150
+           </span>
+           ₹120
+          </div>
+          <button class="add-btn" onclick="addToCart('Pepper Chicken', 120)">
+            ADD
+        </button>
+         </div>
+        </div>
+   <div class="section-title">
+    VEGETARIAN
+   </div>
+   <div class="product-grid">
+    <div class="product-card">
+     <div class="discount">
+      21% OFF
+     </div>
+     <img alt="Delicious plate of biriyani" height="150" src="parotta.jpeg" width="150"/>     
+     <div class="name">
+      Parotta
+     </div>
+     <div class="weight">
+      1 piece
+     </div>
+     <div class="price">
+      <span class="old-price">
+       ₹15
+      </span>
+      ₹12
+     </div>
+     <button class="add-btn"onclick="addToCart('Parotta', 12)">
+      ADD
+     </button>
+    </div>
+    <div class="product-card">
+     <div class="discount">
+      19% OFF
+     </div>
+     <img alt="Sunpure Refined Sunflower Oil" height="150" src="paneer-butter-masala.jpg" width="150"/>     
+     <div class="name">
+      Paneer Butter Masala
+     </div>
+     <div class="weight">
+      1 piece
+     </div>
+     <div class="price">
+      <span class="old-price">
+       ₹200
+      </span>
+      ₹190
+     </div>
+     <button class="add-btn"onclick="addToCart('Paneer Butter Masala', 190)">
+      ADD
+     </button>
+    </div>
+    <div class="product-card">
+     <img alt="Bhagyalakshmi Urad Dal - Split" height="150" src="masala dosa.jpeg" width="150"/>    
+     <div class="name">
+     Masala Dosa
+     </div>
+     <div class="weight">
+      1 piece
+     </div>
+     <div class="price">
+       <span class="old-price">
+        ₹90
+       </span>
+       ₹70
+     </div>
+     <button class="add-btn"onclick="addToCart('Masala Dosa', 70)">
+      ADD
+     </button>
+    </div>
+    <div class="product-card">
+     <img alt="Eastern Kashmiri Chilly Powder" height="150" src="gopi manchuri.jpg" width="150"/>
+     <div class="name">
+      Gopi Manchurian
+     </div>
+     <div class="weight">
+      1 piece
+     </div>
+     <div class="price">
+       <span class="old-price">
+        ₹200
+       </span>
+       ₹190
+     </div>
+     <button class="add-btn"onclick="addToCart('Gopi Manchurian', 190)">
+      ADD
+     </button>
+    </div>
+    <div class="product-card">
+     <img alt="Bhagyalakshmi Idli Sooji" height="150" src="veg fried rice.jpg" width="150"/>
+     <div class="name">
+      Veg Fried Rice
+     </div>
+     <div class="weight">
+      1 piece
+     </div>
+     <div class="price">
+       <span class="old-price">
+        ₹230
+       </span>
+       ₹200
+     </div>
+     <button class="add-btn"onclick="addToCart(' Veg Fried Rice', 200)">
+      ADD
+     </button>
+    </div>
+    <div class="product-card">
+     <div class="discount">
+      2% OFF
+     </div>
+     <img alt="Bhagyalakshmi Bni Super Premium..." height="150" src="veg  noodles.jpeg" width="150"/>
+     <div class="name">
+     Veg Noodles
+     </div>
+     <div class="weight">
+      1 piece
+     </div>
+     <div class="price">
+      <span class="old-price">
+       ₹150
+      </span>
+      ₹120
+     </div>
+     <button class="add-btn"onclick="addToCart('Veg Noodles', 120)">
+      ADD
+     </button>
+    </div>
+   </div>
+    <div class="section-title">
+        COOL DRINKS
+    </div>
+    <div class="product-grid">
+     <div class="product-card">
+      <div class="discount">
+       21% OFF
+      </div>
+      <img alt="Borosil Stainless Steel Hydra Gospo..." height="150" src="mohito.jpeg" width="150"/>
+      <div class="name">
+       Mohito
+      </div>
+      <div class="weight">
+       1 Piece
+      </div>
+      <div class="price">
+       <span class="old-price">
+        ₹80
+       </span>
+       ₹60
+      </div>
+      <button class="add-btn"onclick="addToCart('Mohito', 60)">
+       ADD
+      </button>
+     </div>
+     <div class="product-card">
+      <div class="discount">
+       19% OFF
+      </div>
+      <img alt="Sunpure Refined Sunflower Oil" height="150" src="fruit.jpg"width="150"/>
+      <div class="name">
+       Fruit Saladd
+      </div>
+      <div class="weight">
+       1 piece
+      </div>
+      <div class="price">
+       <span class="old-price">
+        ₹140
+       </span>
+       ₹120
+      </div>
+      <button class="add-btn"onclick="addToCart('Fruit Salad', 120)">
+       ADD
+      </button>
+     </div>
+     <div class="product-card">
+      <img alt="Bhagyalakshmi Urad Dal - Split" height="150" src="falooda.jpg"width="150"/>  
+      <div class="name">
+       Falooda
+      </div>
+      <div class="weight">
+       1 piece
+      </div>
+      <div class="price">
+        <span class="old-price">
+            ₹180
+           </span>
+           ₹140
+      </div>
+      <button class="add-btn"onclick="addToCart('Falooda', 140)">
+       ADD
+      </button>
+     </div>
+     <div class="product-card">
+      <img alt="Eastern Kashmiri Chilly Powder" height="150" src="avil.jpeg" width="150"/>   
+      <div class="name">
+       Avil Milk
+      </div>
+      <div class="weight">
+       1 piece
+      </div>
+      <div class="price">
+        <span class="old-price">
+            ₹60
+           </span>
+           ₹40
+      </div>
+      <button class="add-btn"onclick="addToCart(' Avil Milk', 40)">
+       ADD
+      </button>
+     </div>
+     <div class="product-card">
+      <img alt="Bhagyalakshmi Idli Sooji" height="150" src="cocktail.jpeg" width="150"/>    
+      <div class="name">
+       Cocktail
+      </div>
+      <div class="weight">
+       1 piece
+      </div>
+      <div class="price">
+        <span class="old-price">
+            ₹130
+           </span>
+           ₹100
+      </div>
+      <button class="add-btn"onclick="addToCart('cocktail', 100)">
+       ADD
+      </button>
+     </div>
+     <div class="product-card">
+      <div class="discount">
+       2% OFF
+      </div>
+      <img alt="Bhagyalakshmi Bni Super Premium..." height="150" src="shake.jpeg"width="150"/>
+      <div class="name">
+      Chocalate Shake
+      </div>
+      <div class="weight">
+       1 piece
+      </div>
+      <div class="price">
+       <span class="old-price">
+        ₹100
+       </span>
+       ₹80
+      </div>
+      <button class="add-btn" onclick="addToCart(' Chocalate Shake', 80)">
+        ADD
+    </button>
+     </div>
+    </div>
+ <script>
+    function addToCart(productName, productPrice) {
+        // Find the clicked button’s image automatically
+        const button = event.target;
+        const productCard = button.closest('.product-card');
+        const imgSrc = productCard.querySelector('img').src;
+
+        // Get the existing cart or create a new one
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Add the product (with image)
+        cart.push({
+            name: productName,
+            price: productPrice,
+            image: imgSrc
+        });
+
+        // Save updated cart to localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Show alert confirmation
+        alert(`${productName} has been added to your cart.`);
+    }
+</script>
+
+ </body>
+</html>

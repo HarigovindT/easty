@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment & Address</title>
+  <style>
+       .home-icon {
+  position:absolute;
+  top: 70px;
+  left: 540px;
+  font-size: 28px;
+  color: #df305f;
+  text-decoration: none;
+  background: white;
+  border-radius: 50%;
+  padding: 10px 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+.home-icon:hover {
+  color: white;
+  background: #df305f;
+  transform: scale(1.1);
+}
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url(formbg.png);
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .payment-container {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #218838;
+    }
+    .total {
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    .summary {
+      text-align: left;
+      margin-bottom: 15px;
+      font-size: 15px;
+      color: #000000;
+      background-color: rgba(216, 22, 103, 0.8);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .back {
+      display: inline-block;
+      margin-top: 10px;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .back:hover {
+      text-decoration: underline;
+    }
+    #msg {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+     <a href="eastypro.html" class="home-icon" title="Go to Home">
+  <i class="fas fa-home"></i>
+</a>
+  <div class="payment-container">
+    <h1>Payment & Address</h1>
+
+    <div class="summary" id="order-summary"></div>
+    <div class="total" id="total-amount">Total: ₹0</div>
+
+    <form id="paymentForm">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="text" id="address" placeholder="Address" required>
+      <input type="text" id="city" placeholder="City" required>
+      <input type="text" id="pincode" placeholder="Pincode" required>
+      <select id="payment-method" required>
+        <option value="">Select Payment Method</option>
+        <option value="Card">Credit/Debit Card</option>
+        <option value="UPI">UPI</option>
+        <option value="COD">Cash on Delivery</option>
+      </select>
+      <button type="submit" class="btn">Confirm Order</button>
+      <p id="msg"></p>
+    </form>
+
+    <a href="cart.html" class="back">← Back to Cart</a>
+  </div>
+
+  <script type="module">
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    // ✅ Login Firebase App (for Auth)
+    const loginConfig = {
+      apiKey: "AIzaSyCX_mwSLh7XJHYKcudDRlLNCb20fR9Fhu4",
+      authDomain: "eatsylogin.firebaseapp.com",
+      projectId: "eatsylogin",
+      storageBucket: "eatsylogin.firebasestorage.app",
+      messagingSenderId: "1064504602051",
+      appId: "1:1064504602051:web:148c953a5301532bdf6176"
+    };
+
+    // ✅ Orders Firebase App (for Firestore)
+    const orderConfig = {
+      apiKey: "AIzaSyD0BpXUxwKHz7M5BqzICoo95c64d1zrwsk",
+      authDomain: "restaurantorders-36ef1.firebaseapp.com",
+      projectId: "restaurantorders-36ef1",
+      storageBucket: "restaurantorders-36ef1.firebasestorage.app",
+      messagingSenderId: "592429269702",
+      appId: "1:592429269702:web:1e7d96bf6d26aba2548dc7"
+    };
+
+    // Prevent re-initialization
+    const loginApp = getApps().find(app => app.name === "[DEFAULT]") || initializeApp(loginConfig);
+    const ordersApp = getApps().find(app => app.name === "ordersApp") || initializeApp(orderConfig, "ordersApp");
+
+    const auth = getAuth(loginApp); // ✅ use same login session
+    const db = getFirestore(ordersApp); // ✅ save to orders DB
+
+    // 🛒 Load cart details
+    const total = localStorage.getItem("total") || 0;
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const summaryDiv = document.getElementById("order-summary");
+    if (cart.length > 0) {
+      summaryDiv.innerHTML = "<strong>Order Summary:</strong><br>" +
+        cart.map(item => `${item.name} × ${item.quantity || 1} = ₹${item.price * (item.quantity || 1)}`).join("<br>");
+    } else {
+      summaryDiv.textContent = "Your cart is empty.";
+    }
+    document.getElementById("total-amount").textContent = `Total: ₹${total}`;
+
+    // 🧾 Handle order submit
+    document.getElementById("paymentForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("msg");
+      const user = auth.currentUser;
+
+      if (!user) {
+        alert("Please log in before placing an order.");
+        window.location.href = "auth.html";
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "orders"), {
+          userId: user.uid,
+          email: user.email,
+          name: document.getElementById("name").value,
+          address: document.getElementById("address").value,
+          city: document.getElementById("city").value,
+          pincode: document.getElementById("pincode").value,
+          payment: document.getElementById("payment-method").value,
+          total: parseFloat(total),
+          cart: cart,
+          timestamp: serverTimestamp()
+        });
+
+        msg.textContent = "✅ Order Confirmed & Saved!";
+        msg.style.color = "green";
+
+        // 🧹 Clear cart and redirect
+        localStorage.removeItem("cart");
+        localStorage.removeItem("total");
+
+        setTimeout(() => {
+          window.location.href = "orders.html";
+        }, 1500);
+
+      } catch (error) {
+        console.error("❌ Error saving order:", error);
+        msg.textContent = "❌ Failed to save order.";
+        msg.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>
